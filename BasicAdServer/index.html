@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+	 <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+<html>
+<head>
+	<title>Ad-Server Demo</title>
+</head>
+	<script type="text/javascript">
+	var socket = io.connect('http://localhost:8080');
+	function submitprofile(form){	
+	var region = form.region.value,
+	state = form.state.value,
+	city = form.city.value,
+	gender = form.gender.value,
+	age = form.age.value,
+	maritalstatus = form.maritalstatus.value,
+	children = form.children.value,
+	intent = form.intent.value,
+	intrest = form.intrest.value;
+	var profiledata = [region,state,city,gender,age,maritalstatus,children,intent,intrest];
+		socket.emit('profile',profiledata);
+		form.region.value = "region";
+		form.state.value = "state";
+		form.city.value = "city";
+		form.gender.value = "gender";
+		form.age.value = "age";
+		form.maritalstatus.value = "maritalstatus";
+		form.children.value = "children";
+		form.intent.value = "intent";
+		form.intrest.value = "intrest";
+	}  
+	function cleanstring(data){
+	var n = data.lastIndexOf(":")+2, m = data.lastIndexOf("}")-1; 
+	return data.slice(n,m); 
+	}
+socket.on('ad', function (data) {
+	   document.getElementById("content").innerHTML=cleanstring(data);
+      });	 
+	</script>
+	<body>
+	 <form name='requestad'>	
+	  <input type='text' name='region' value='region' />
+	  <input type='text' name='state' value='state' />
+	  <input type='text' name='city' value='city' />
+	  <input type='text' name='gender' value='gender' />
+	  <input type='text' name='age' value='age' />
+	  <input type='text' name='maritalstatus' value='marital status' />
+	  <input type='text' name='children' value='children' />
+	  <input type='text' name='intent' value='intent' />
+	  <input type='text' name='intrest' value='intrest' />
+	  <input type='button' value='Request Ad' onclick='submitprofile(this.form)' />
+	</form>
+    <div id = "content" style="width:800px;padding:10px;height:50px;position:absolute;margin-top:-25px;margin-left:-400px;top:50%;left:50%;font-size: 8em;">
+	Ad Content Here 
+	</div>
+	</body>
+</html>
